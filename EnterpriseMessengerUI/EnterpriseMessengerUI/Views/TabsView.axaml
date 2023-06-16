@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:EnterpriseMessengerUI.ViewModels"
+             xmlns:views="clr-namespace:EnterpriseMessengerUI.Views"
+             xmlns:conv="clr-namespace:EnterpriseMessengerUI.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EnterpriseMessengerUI.Views.TabsView"
+             Foreground="White"
+             Background="#171C2C">
+	<Design.DataContext>
+		<viewModels:TabsViewModel />
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<conv:BitmapAssetValueConverter x:Key="imageConverter"/>
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#134884FF"/>
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+		<Style Selector="TabItem:pointerover Grid Image">
+			<Setter Property="Source" Value="{Binding ImagePointeroverPath, Converter={StaticResource imageConverter}}"/>
+		</Style>
+		<Style Selector="TabItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#124078FF"/>
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+		<Style Selector="TabItem Grid">
+			<Setter Property="Margin" Value="5 10 5 10"/>
+		</Style>
+		<Style Selector="TabItem Grid Image">
+			<Setter Property="Height" Value="50"/>
+			<Setter Property="Grid.Row" Value="0"/>
+			<Setter Property="Source" Value="{Binding ImagePath, Converter={StaticResource imageConverter}}"/>
+		</Style>
+		<Style Selector="TabItem Grid Label">
+			<Setter Property="FontSize" Value="20"/>
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+			<Setter Property="Grid.Row" Value="1"/>
+		</Style>
+	</UserControl.Styles>
+
+	<TabControl TabStripPlacement="Right" Grid.IsSharedSizeScope="True" Items="{Binding TabItems}" x:Name="tabs" Padding="0,0,12,0">
+		<TabControl.ItemsPanel>
+			<ItemsPanelTemplate>
+				<UniformGrid Columns="1" Background="#1F253A"/>
+			</ItemsPanelTemplate>
+		</TabControl.ItemsPanel>
+
+		<TabControl.ItemTemplate>
+			<DataTemplate>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition SharedSizeGroup="MenuButtons"/>
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+
+					<Image/>
+					<Label Content="{Binding Header}"></Label>
+				</Grid>
+			</DataTemplate>
+		</TabControl.ItemTemplate>
+
+		<TabControl.ContentTemplate>
+			<DataTemplate>
+				<ContentControl Content="{Binding Content}" Margin="0,0,-12,0" Focusable="True" />
+			</DataTemplate>
+		</TabControl.ContentTemplate>
+	</TabControl>
+</UserControl>

@@ -1,0 +1,355 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+             xmlns:views="using:EnterpriseMessengerUI.Views"
+             xmlns:conv="using:EnterpriseMessengerUI.Converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EnterpriseMessengerUI.Views.MessagesTabView"
+			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             Foreground="White"
+             Background="#171C2C">
+	<Design.DataContext>
+		<vm:MessagesTabViewModel />
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<conv:BitmapAssetValueConverter x:Key="imageConverter"/>
+		<conv:MathDivideConverter x:Key="mathDivideConverter"/>
+		<conv:MathSubtractConverter x:Key="MathSubtractConverter"/>
+		<conv:AsyncToDefaultConverter x:Key="asyncToDefaultConverter"/>
+		<x:Double x:Key="CoeffDivide">1.5</x:Double>
+		<x:Double x:Key="CoeffSubtract">24</x:Double>
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="Button Image">
+			<Setter Property="Width" Value="30"/>
+		</Style>
+		<Style Selector="Button#newChatB Image">
+			<Setter Property="Source" Value="/Assets/plus.png"/>
+		</Style>
+		<Style Selector="Button#newChatB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/plus_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#newChatB:disabled Image">
+			<Setter Property="Source" Value="/Assets/plus_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#infoB Image">
+			<Setter Property="Source" Value="/Assets/info.png"/>
+		</Style>
+		<Style Selector="Button#infoB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/info_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#editChatB Image">
+			<Setter Property="Source" Value="/Assets/edit.png"/>
+		</Style>
+		<Style Selector="Button#editChatB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/edit_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#shareChatB Image">
+			<Setter Property="Source" Value="/Assets/plus-circled.png"/>
+		</Style>
+		<Style Selector="Button#shareChatB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/plus-circled_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#chatParticipantsB Image">
+			<Setter Property="Source" Value="/Assets/group.png"/>
+		</Style>
+		<Style Selector="Button#chatParticipantsB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/group_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#leaveChatB Image">
+			<Setter Property="Source" Value="/Assets/logout.png"/>
+		</Style>
+		<Style Selector="Button#leaveChatB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/logout_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#cancelEditB Image">
+			<Setter Property="Source" Value="/Assets/close.png"/>
+		</Style>
+		<Style Selector="Button#cancelEditB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/close_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#removeAttachmentB Image">
+			<Setter Property="Source" Value="/Assets/close.png"/>
+		</Style>
+		<Style Selector="Button#removeAttachmentB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/close_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#attachmentsB Image">
+			<Setter Property="Source" Value="/Assets/paper-clip.png"/>
+		</Style>
+		<Style Selector="Button#attachmentsB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/paper-clip_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#attachmentsB:disabled Image">
+			<Setter Property="Source" Value="/Assets/paper-clip_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#sendB Image">
+			<Setter Property="Source" Value="/Assets/send.png"/>
+		</Style>
+		<Style Selector="Button#sendB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/send_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#sendB:disabled Image">
+			<Setter Property="Source" Value="/Assets/send_pointerover.png"/>
+		</Style>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="Button#showAttachmentsB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#4566AD"/>
+		</Style>
+		<Style Selector="ListBox#messagesLB ListBoxItem">
+			<Setter Property="HorizontalAlignment" Value="{Binding HorizontalAlignment}"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="Margin" Value="0,0,0,5"/>
+		</Style>
+		<Style Selector="ListBox#messagesLB ListBoxItem:selected">
+			<Setter Property="CornerRadius" Value="4"/>
+		</Style>
+		<Style Selector="ListBox#messagesLB ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="HorizontalAlignment" Value="{Binding $parent[ListBoxItem].HorizontalAlignment}"/>
+			<Setter Property="CornerRadius" Value="4"/>
+		</Style>
+		<Style Selector="ListBox#messagesLB ListBoxItem Border SelectableTextBlock">
+			<Setter Property="MaxWidth" Value="{Binding $parent[ListBox].Bounds.Width, Converter={StaticResource mathDivideConverter}, ConverterParameter={StaticResource CoeffDivide}}"/>
+		</Style>
+		<Style Selector="ListBox#chatsLB ListBoxItem Grid#chatInfoG">
+			<Setter Property="Width" Value="{Binding $parent[ListBoxItem].Bounds.Width, Converter={StaticResource MathSubtractConverter}, ConverterParameter={StaticResource CoeffSubtract}}"/>
+		</Style>
+		<Style Selector="TextBox#realSearchTB Border#PART_BorderElement">
+			<Setter Property="Background" Value="{Binding #pseudoSearchBorder.Background, Mode=TwoWay}"/>
+			<Setter Property="BorderBrush" Value="{Binding #pseudoSearchBorder.BorderBrush, Mode=TwoWay}"/>
+		</Style>
+		<Style Selector="TextBox#realSearchTB:pointerover Border#PART_BorderElement">
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Background" Value="{Binding #pseudoSearchBorder.Background, Mode=TwoWay}"/>
+		</Style>
+		<Style Selector="TextBox#realSearchTB:focus Border#PART_BorderElement">
+			<Setter Property="BorderThickness" Value="0"/>
+		</Style>
+		<Style Selector="ListBox#attachmentsLB ListBoxItem">
+			<Setter Property="Padding" Value="12,6,0,6"/>
+			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="BorderBrush" Value="White"/>
+			<Setter Property="BorderThickness" Value="1.5"/>
+			<Setter Property="Margin" Value="3,2.5"/>
+		</Style>
+		<Style Selector="Button#removeAllAttachmentsB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="TextBox#messageTB:disabled /template/ TextBlock#PART_Watermark">
+			<Setter Property="Foreground" Value="#C4C6D1"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid ColumnDefinitions="*,2.5*">
+		<DockPanel Grid.Column="0" Background="#111521">
+			<Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" RowDefinitions="35" Margin="5,5,0,10">
+				<Border x:Name="pseudoSearchBorder" Grid.Column="0" BorderThickness="2" BorderBrush="White" CornerRadius="25" Margin="0,0,5,0">
+					<Grid ColumnDefinitions="Auto,*">
+						<Image Grid.Column="0" Source="/Assets/loupe.png" Opacity="0.5" Margin="8,0,0,0" Width="20" />
+						<TextBox x:Name="realSearchTB" Background="#0E111A" Grid.Column="1" BorderThickness="0" VerticalContentAlignment="Center" Watermark="{Binding SearchWatermark}" CornerRadius="0,25,25,0" Padding="5,6,6,5" />
+					</Grid>
+				</Border>
+				<Button Grid.Column="1" Background="Transparent" Padding="0,5,0,6" Margin="0,0,5,0" x:Name="newChatB" ToolTip.Tip="Начать диалог или создать групповой чат" Command="{Binding NewChatOpenDialogCommand}">
+					<Image/>
+				</Button>
+			</Grid>
+
+			<Grid IsVisible="{Binding !#chatsLB.IsVisible}" Width="{Binding $parent[DockPanel].Bounds.Width}" VerticalAlignment="Center">
+				<TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center" Text="{Binding ChatsAreEmptyMessage}" />
+			</Grid>
+
+			<ListBox x:Name="chatsLB" Background="#111521" IsVisible="{Binding ChatsVisible}" Items="{Binding ChatItems}" SelectedItem="{Binding SelectedChat}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Grid ColumnDefinitions="*,5*,Auto" RowDefinitions="Auto,Auto" HorizontalAlignment="Left" x:Name="chatInfoG">
+							<Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" ClipToBounds="True" CornerRadius="180" Margin="0,0,10,0" MinWidth="20" MaxWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip.Tip="{Binding NetworkStatusTT}" x:Name="{Binding ChatId, StringFormat=avatarI_{0}}">
+								<Border.Background>
+									<ImageBrush Source="{Binding ChatId, Converter={StaticResource asyncToDefaultConverter}, ConverterParameter={Binding ChatId, StringFormat=#invAvatarI_{0}}}" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+								</Border.Background>
+								<Grid>
+									<asyncImageLoader:AdvancedImage Source="{Binding PhotoFileName}" MinWidth="20" MaxWidth="50" HorizontalAlignment="Left" IsVisible="False" x:Name="{Binding ChatId, StringFormat=invAvatarI_{0}}" />
+									<Image Source="/Assets/empty.png" MinWidth="20" MaxWidth="50" />
+									
+									<Image Source="{Binding NetworkStatusIcon, Converter={StaticResource imageConverter}}" MinWidth="5" MaxWidth="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" x:Name="{Binding ChatId, StringFormat=networkStatusIconI_{0}}" />
+								</Grid>
+							</Border>
+
+							<TextBlock Grid.Column="1" Grid.Row="0" Margin="0,0,5,0" FontSize="15.6" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" IsVisible="{Binding !IsGroupChat}">
+								<TextBlock.Text>
+									<MultiBinding StringFormat="{}{0} {1}. {2}.">
+										<Binding Path="Surname"/>
+										<Binding Path="Name[0]"/>
+										<Binding Path="Patronymic[0]"/>
+									</MultiBinding>
+								</TextBlock.Text>
+							</TextBlock>
+							<TextBlock Grid.Column="1" Grid.Row="0" Margin="0,0,5,0" FontSize="15.6" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Surname}" IsVisible="{Binding IsGroupChat}"/>
+							<TextBlock Grid.Column="1" Grid.Row="1" Margin="{Binding LastMessageMargin}" Foreground="DarkGray" FontSize="13" TextWrapping="NoWrap" MaxLines="1" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding LastMessageText}"/>
+
+							<TextBlock Grid.Column="2" Grid.Row="0" FontWeight="Light" Foreground="DarkGray" FontSize="13" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding LastMessageSendDateTime}"/>
+							<Border Grid.Column="2" Grid.Row="1" CornerRadius="90" Background="White" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="3" IsVisible="{Binding ReadStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Width="{Binding $self.Bounds.Height}" Height="{Binding ReadStatusHeight}" Margin="{Binding ReadStatusMargin}">
+								<TextBlock FontSize="13" Foreground="#111521" VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding ReadStatus}" />
+							</Border>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</DockPanel>
+
+		<Grid ColumnDefinitions="Auto,Auto" Grid.Column="1" IsVisible="{Binding ForwardActive}" VerticalAlignment="Center" HorizontalAlignment="Center">
+			<Image Grid.Column="0" Width="35" Margin="0,0,5,0" Source="/Assets/right-arrow.png" />
+			<TextBlock Grid.Column="1" FontSize="16" TextWrapping="Wrap" VerticalAlignment="Center">Выберите диалог</TextBlock>
+		</Grid>
+
+		<DockPanel Grid.Column="1" IsVisible="{Binding IsMessagesDPVisible}">
+			<Border DockPanel.Dock="Top" Background="#26304C" CornerRadius="0,10" Margin="0,0,0,5">
+				<Grid Width="{Binding $parent[DockPanel].Bounds.Width}" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" HorizontalAlignment="Left">
+					<SelectableTextBlock Grid.Column="0" Grid.Row="0" Margin="12,5,10,0" FontSize="15.6" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left">
+						<SelectableTextBlock.Text>
+							<MultiBinding StringFormat="{}{0} {1} {2}">
+								<Binding Path="SelectedChat.Surname"/>
+								<Binding Path="SelectedChat.Name"/>
+								<Binding Path="SelectedChat.Patronymic"/>
+							</MultiBinding>
+						</SelectableTextBlock.Text>
+					</SelectableTextBlock>
+					<SelectableTextBlock Grid.Column="0" Grid.Row="1" Margin="12,5,10,10" Foreground="DarkGray" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding SelectedChat.Position}"/>
+
+					<Button Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Margin="0,0,3,0" Background="Transparent" x:Name="infoB" Click="OnInfoBClick" ToolTip.Tip="Информация" IsVisible="{Binding SelectedChat.Information, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+						<Image/>
+					</Button>
+					
+					<StackPanel Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Orientation="Horizontal" Margin="0,0,3,0" HorizontalAlignment="Right" VerticalAlignment="Center" IsVisible="{Binding SelectedChat.IsGroupChat}">
+						<Button Background="Transparent" x:Name="editChatB" Padding="8,5,4,6" Command="{Binding GroupChatEditOpenDialogCommand}" CommandParameter="{Binding SelectedChat.ChatId}" ToolTip.Tip="Редактировать" IsVisible="{Binding SelectedChat.IsGroupChatAuthor}">
+							<Image/>
+						</Button>
+						<Button Background="Transparent" x:Name="shareChatB" Padding="{Binding SelectedChat.ShareChatBPadding}" Click="OnShareChatBClick" ToolTip.Tip="Добавить участников">
+							<Image/>
+						</Button>
+						<Button Background="Transparent" x:Name="chatParticipantsB" Padding="{Binding SelectedChat.ChatParticipantsBPadding}" Click="OnChatParticipantsBClick" ToolTip.Tip="Участники">
+							<Image/>
+						</Button>
+						<Button Background="Transparent" x:Name="leaveChatB" Padding="4,5,8,6" Click="OnLeaveChatBClick" ToolTip.Tip="Покинуть чат" IsVisible="{Binding !SelectedChat.IsGroupChatAuthor}">
+							<Image/>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
+
+			<StackPanel DockPanel.Dock="Bottom" Margin="3,0,3,10" IsVisible="{Binding IsThereAttachments}">
+				<ListBox Background="#26304C" MaxHeight="175" CornerRadius="10" SelectionMode="Multiple,Toggle" x:Name="attachmentsLB" Items="{Binding Attachments}" SelectedItems="{Binding SelectedAttachments}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+								<Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" ClipToBounds="True" CornerRadius="{Binding PictureFileNameCornerRadius}" Margin="0,0,10,0" Width="25" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="{Binding Guid, StringFormat=avatarI_{0}}">
+									<Border.Background>
+										<ImageBrush Source="{Binding Guid, Converter={StaticResource asyncToDefaultConverter}, ConverterParameter={Binding Guid, StringFormat=#invAvatarI_{0}}}" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+									</Border.Background>
+									<StackPanel>
+										<asyncImageLoader:AdvancedImage Source="{Binding PictureFileName}" Width="25" HorizontalAlignment="Left" IsVisible="False" x:Name="{Binding Guid, StringFormat=invAvatarI_{0}}" />
+										<Image Source="/Assets/empty.png" Width="25" />
+									</StackPanel>
+								</Border>
+
+								<Grid ColumnDefinitions="*,Auto" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,3">
+									<SelectableTextBlock Grid.Column="0" FontSize="14" FontWeight="SemiBold" Text="{Binding AdditionalData}" Margin="0,0,5,0" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="NoWrap" MaxLines="1" TextTrimming="CharacterEllipsis" />
+									<TextBlock Grid.Column="1" FontSize="12" Foreground="Gray" Text="{Binding SendDateTime}" HorizontalAlignment="Left" VerticalAlignment="Center" />
+								</Grid>
+								<SelectableTextBlock Grid.Column="1" Grid.Row="1" Text="{Binding DataText}" FontSize="12" Foreground="DarkGray" TextWrapping="NoWrap" MaxLines="1" TextTrimming="CharacterEllipsis" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,2" />
+
+								<Button Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" Background="Transparent" x:Name="removeAttachmentB" ToolTip.Tip="Открепить" Margin="0,0,3,0" Command="{Binding RemoveAttachment}" CommandParameter="{Binding #attachmentsLB}">
+									<Image Width="15" />
+								</Button>
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<Button FontSize="16" CornerRadius="10" Background="#0F5B9F" Width="{Binding #attachmentsLB.Bounds.Width}" Margin="0,5,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" x:Name="removeAllAttachmentsB" Content="{Binding RemoveAllAttachmentsBText}" Click="RemoveAllAttachments" />
+			</StackPanel>
+			
+
+			<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Bottom" Margin="5,10">
+				<Button Grid.Column="0" Background="Transparent" x:Name="attachmentsB" Click="OnAttachmentsBClick" ToolTip.Tip="Прикрепить файл">
+					<Image/>
+				</Button>
+				<TextBox
+					Grid.Column="1"
+					VerticalContentAlignment="Center"
+					HorizontalContentAlignment="Left"
+					TextWrapping="Wrap"
+					AcceptsReturn="True"
+					MaxHeight="150"
+					Margin="5,0"
+					FontSize="16"
+					BorderThickness="2"
+					BorderBrush="White"
+					x:Name="messageTB"
+					DragDrop.AllowDrop="True" />
+				<Button Grid.Column="2" Background="Transparent" x:Name="sendB" Click="OnSendBClick" ToolTip.Tip="Отправить">
+					<Image/>
+				</Button>
+			</Grid>
+
+			<Border DockPanel.Dock="Bottom" Background="#26304C" CornerRadius="10" Margin="3,5,3,-2" IsVisible="{Binding MessageToEdit, Converter={x:Static ObjectConverters.IsNotNull}}">
+				<Grid ColumnDefinitions="*,Auto">
+					<TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="10,0,0,0" Text="Редактирование сообщения" />
+					<Button Grid.Column="1" Background="Transparent" x:Name="cancelEditB" Margin="0,0,5,0" Click="CancelEdit">
+						<Image Width="15" />
+					</Button>
+				</Grid>
+			</Border>
+
+			<Grid IsVisible="{Binding !#messagesLB.IsVisible}" Width="{Binding $parent[DockPanel].Bounds.Width}" VerticalAlignment="Center">
+				<TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center">Сообщений пока нет...</TextBlock>
+			</Grid>
+
+			<ListBox DockPanel.Dock="Bottom" Background="#171C2C" VerticalAlignment="Bottom" SelectionMode="Multiple,Toggle" Margin="2,0,0,0" Padding="0,0,0,5" x:Name="messagesLB" IsVisible="{Binding IsMessagesLBVisible}" Items="{Binding Messages}" SelectedItems="{Binding SelectedMessages}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Border BorderThickness="2" CornerRadius="4" Padding="5" Background="{Binding Background}" ContextRequested="MessagesLBItem_ContextRequested">
+							<Border.ContextFlyout>
+								<MenuFlyout>
+									<MenuItem Header="Ответить" Command="{Binding Respond}" CommandParameter="{Binding #messagesLB}" />
+									<MenuItem Header="Переслать" Command="{Binding Forward}" CommandParameter="{Binding #messagesLB}" />
+									<MenuItem Header="Копировать текст" Command="{Binding Copy}" />
+									<MenuItem Header="Редактировать" Command="{Binding Edit}" CommandParameter="{Binding #messagesLB}" IsVisible="{Binding CanEditDelete}" />
+									<MenuItem Header="Удалить" Command="{Binding Delete}" CommandParameter="{Binding #messagesLB}" IsVisible="{Binding CanEditDelete}" />
+								</MenuFlyout>
+							</Border.ContextFlyout>
+							<StackPanel>
+								<DockPanel HorizontalAlignment="{Binding HorizontalAlignment}" IsVisible="{Binding #messagesLB.DataContext.SelectedChat.IsGroupChat}">
+									<Border DockPanel.Dock="{Binding HorizontalAlignment}" Width="25" ClipToBounds="True" CornerRadius="180" VerticalAlignment="Center" x:Name="{Binding AuthorId, StringFormat=avatarI_{0}}">
+										<Border.Background>
+											<ImageBrush Source="{Binding AuthorId, Converter={StaticResource asyncToDefaultConverter}, ConverterParameter={Binding AuthorId, StringFormat=#invAvatarI_{0}}}" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+										</Border.Background>
+										<StackPanel>
+											<asyncImageLoader:AdvancedImage Source="{Binding PhotoFileName}" Width="25" IsVisible="False" x:Name="{Binding AuthorId, StringFormat=invAvatarI_{0}}" />
+											<Image Source="/Assets/empty.png" Width="25" />
+										</StackPanel>
+									</Border>
+									<TextBlock DockPanel.Dock="{Binding HorizontalAlignment}" VerticalAlignment="Center" Margin="5,0" Foreground="#B7B7B7" TextWrapping="Wrap" Text="{Binding AuthorName}" />
+								</DockPanel>
+								<SelectableTextBlock Margin="0,5,0,0" TextWrapping="Wrap" Text="{Binding Text}" IsVisible="{Binding Text, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+								<Button IsVisible="{Binding IsAttachmentsVisible}" x:Name="showAttachmentsB" Margin="0,7,0,2" FontSize="13" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Command="{Binding ShowAttachments}" CommandParameter="{Binding #messagesLB}">Показать вложения</Button>
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+									<TextBlock FontSize="12" Foreground="Gray" Text="{Binding Edited}" ToolTip.Tip="{Binding EditedTT}" Margin="0,0,5,0" />
+									<TextBlock FontSize="12" Foreground="Gray" Text="{Binding SendDateTime}" />
+								</StackPanel>
+							</StackPanel>
+						</Border>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</DockPanel>
+	</Grid>
+</UserControl>

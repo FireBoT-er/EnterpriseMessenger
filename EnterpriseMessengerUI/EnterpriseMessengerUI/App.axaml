@@ -1,0 +1,57 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:EnterpriseMessengerUI"
+             x:Class="EnterpriseMessengerUI.App">
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme Mode="Dark"/>
+
+		<StyleInclude Source="avares://AsyncImageLoader.Avalonia/AdvancedImage.axaml" />
+
+		<Style Selector="ListBox">
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Visible"/>
+			<Setter Property="ScrollViewer.AllowAutoHide" Value="False"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollContentPresenter#PART_ContentPresenter">
+			<Setter Property="Margin" Value="0,0,18,0"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar">
+			<Setter Property="Background" Value="#26304C"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ Thumb">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate>
+						<Border Background="#394972" CornerRadius="10"/>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ Thumb:pointerover /template/ Border">
+			<Setter Property="Background" Value="#46598C"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ Thumb:pressed /template/ Border">
+			<Setter Property="Background" Value="#526AA5"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ Rectangle">
+			<Setter Property="IsVisible" Value="False"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar Grid Border#VerticalRoot">
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ RepeatButton#PART_LineUpButton ContentPresenter">
+			<Setter Property="CornerRadius" Value="10,10,0,0"/>
+		</Style>
+		<Style Selector="ScrollViewer /template/ ScrollBar /template/ RepeatButton#PART_LineDownButton ContentPresenter">
+			<Setter Property="CornerRadius" Value="0,0,10,10"/>
+		</Style>
+
+		<Style Selector="Window">
+			<Setter Property="Background" Value="#171C2C"/>
+		</Style>
+    </Application.Styles>
+</Application>

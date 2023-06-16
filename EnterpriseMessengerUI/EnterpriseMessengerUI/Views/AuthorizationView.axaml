@@ -1,0 +1,79 @@
+<UserControl x:Class="EnterpriseMessengerUI.Views.AuthorizationView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:CompileBindings="True"
+             x:DataType="vm:AuthorizationViewModel"
+             mc:Ignorable="d"
+			 Foreground="White"
+             Background="#171C2C">
+	<Design.DataContext>
+		<vm:AuthorizationViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Button#loginB">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="#171C2C"/>
+		</Style>
+		<Style Selector="Button#loginB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#747780"/>
+		</Style>
+		<Style Selector="Button#errorInfoB">
+			<Setter Property="Background" Value="DarkRed"/>
+		</Style>
+		<Style Selector="Button#errorInfoB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#700000"/>
+		</Style>
+	</UserControl.Styles>
+
+	<StackPanel VerticalAlignment="Center" Spacing="15" MaxWidth="350">
+		<TextBlock VerticalAlignment="Center"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   Text="Авторизация"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap" />
+		<TextBox VerticalAlignment="Center"
+                 FontSize="16"
+                 Text="{Binding Login}"
+                 Watermark="Логин"
+				 UseFloatingWatermark="True"
+				 KeyDown="Login_KeyDown"
+				 x:Name="loginTB" />
+		<TextBox VerticalAlignment="Center"
+                 FontSize="16"
+				 PasswordChar="*"
+                 Text="{Binding Password}"
+                 Watermark="Пароль"
+				 UseFloatingWatermark="True"
+				 Classes="revealPasswordButton"
+				 KeyDown="Password_KeyDown"
+				 x:Name="passwordTB" />
+		<Button HorizontalAlignment="Center"
+                FontSize="16"
+				x:Name="loginB"
+				Content="Войти"
+				IsEnabled="{Binding CanNavigateNext}"/>
+		<SelectableTextBlock IsVisible="False"
+			   DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=Window}}"
+			   x:Name="dummy" />
+		<TextBlock Foreground="Red"
+				   VerticalAlignment="Center"
+				   TextAlignment="Center"
+                   TextWrapping="Wrap"
+				   FontSize="16"
+				   FontWeight="SemiBold"
+				   x:Name="errorTB"/>
+		<Button HorizontalAlignment="Center"
+                FontSize="16"
+				x:Name="errorInfoB"
+				Content="Подробности"
+				Click="ErrorInfo"
+				IsVisible="False" />
+	</StackPanel>
+</UserControl>

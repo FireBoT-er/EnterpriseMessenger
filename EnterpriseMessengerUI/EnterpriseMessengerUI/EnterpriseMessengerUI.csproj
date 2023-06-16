@@ -1,0 +1,105 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <NeutralLanguage>ru</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <AvaloniaResource Remove="Assets\bells.mp3" />
+    <AvaloniaResource Remove="Assets\notification.mp3" />
+    <None Remove="Assets\blank-page.png" />
+    <None Remove="Assets\chat_pointerover.png" />
+    <None Remove="Assets\close.png" />
+    <None Remove="Assets\close_pointerover.png" />
+    <None Remove="Assets\cogwheel.png" />
+    <None Remove="Assets\cogwheel_pointerover.png" />
+    <None Remove="Assets\contract.png" />
+    <None Remove="Assets\contract_pointerover.png" />
+    <None Remove="Assets\download.png" />
+    <None Remove="Assets\download_pointerover.png" />
+    <None Remove="Assets\edit.png" />
+    <None Remove="Assets\edit_pointerover.png" />
+    <None Remove="Assets\group.png" />
+    <None Remove="Assets\group_pointerover.png" />
+    <None Remove="Assets\info.png" />
+    <None Remove="Assets\info_pointerover.png" />
+    <None Remove="Assets\list.png" />
+    <None Remove="Assets\list_pointerover.png" />
+    <None Remove="Assets\logout.png" />
+    <None Remove="Assets\logout_pointerover.png" />
+    <None Remove="Assets\loupe.png" />
+    <None Remove="Assets\new-moon-green.png" />
+    <None Remove="Assets\new-moon-yellow.png" />
+    <None Remove="Assets\paper-clip.png" />
+    <None Remove="Assets\paper-clip_pointerover.png" />
+    <None Remove="Assets\plus-circled.png" />
+    <None Remove="Assets\plus-circled_pointerover.png" />
+    <None Remove="Assets\plus.png" />
+    <None Remove="Assets\plus_pointerover.png" />
+    <None Remove="Assets\post-it.png" />
+    <None Remove="Assets\post-it_pointerover.png" />
+    <None Remove="Assets\right-arrow.png" />
+    <None Remove="Assets\send.png" />
+    <None Remove="Assets\send_pointerover.png" />
+    <None Remove="Assets\user.png" />
+    <None Remove="server.json" />
+    <Content Include="server.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <TrimmerRootDescriptor Include="Roots.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AsyncImageLoader.Avalonia" Version="3.0.0-avalonia11-preview2" />
+    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.ReactiveUI" Version="$(AvaloniaVersion)" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="MessageBox.Avalonia" Version="2.3.1-prev2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NetCoreAudio" Version="1.7.0" />
+    <PackageReference Include="XamlNameReferenceGenerator" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MessagesTabView.axaml.cs">
+      <DependentUpon>MessagesTabView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ShareWindow.axaml.cs">
+      <DependentUpon>ShareWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TabsView.axaml.cs">
+      <DependentUpon>TabsView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\bells.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\notification.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

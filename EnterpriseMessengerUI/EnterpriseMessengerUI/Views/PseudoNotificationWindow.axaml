@@ -1,0 +1,43 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+		xmlns:views="clr-namespace:EnterpriseMessengerUI.Views"
+        mc:Ignorable="d"
+        x:Class="EnterpriseMessengerUI.Views.PseudoNotificationWindow"
+		xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+		x:CompileBindings="True"
+		x:DataType="vm:PseudoNotificationWindowViewModel"
+		Icon="/Assets/chat.ico"
+        Title="Уведомление (Корпоративный мессенджер)"
+		Position="0,0" WindowStartupLocation="Manual"
+		Background="#171C2C" Foreground="White"
+		Width="300"
+		SizeToContent="Height"
+		CanResize="False" ShowInTaskbar="False">
+	<Design.DataContext>
+		<vm:PseudoNotificationWindowViewModel />
+	</Design.DataContext>
+
+	<Grid ColumnDefinitions="*,5*" RowDefinitions="Auto,Auto" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" x:Name="pseudoNotificationG">
+		<Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" ClipToBounds="True" CornerRadius="180" Margin="0,0,10,0" MinWidth="20" MaxWidth="50" HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="avatarI">
+			<Border.Background>
+				<ImageBrush Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+			</Border.Background>
+			<Image Source="/Assets/empty.png" MinWidth="20" MaxWidth="50" />
+		</Border>
+		<asyncImageLoader:AdvancedImage Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Source="{Binding PhotoFileName}" MinWidth="20" MaxWidth="50" HorizontalAlignment="Left" IsVisible="False" x:Name="invAvatarI" />
+
+		<TextBlock Grid.Column="1" Grid.Row="0" Margin="0,0,5,0" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left">
+			<TextBlock.Text>
+				<MultiBinding StringFormat="{}{0} {1}. {2}.">
+					<Binding Path="Surname"/>
+					<Binding Path="Name[0]"/>
+					<Binding Path="Patronymic[0]"/>
+				</MultiBinding>
+			</TextBlock.Text>
+		</TextBlock>
+		<TextBlock Grid.Column="1" Grid.Row="1" Margin="0,3,5,3" Foreground="DarkGray" FontSize="13" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Text}" />
+	</Grid>
+</Window>

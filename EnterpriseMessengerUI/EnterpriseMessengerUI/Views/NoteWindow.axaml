@@ -1,0 +1,118 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+		Width="400"
+        x:Class="EnterpriseMessengerUI.Views.NoteWindow"
+		Icon="/Assets/chat.ico"
+        Title="Создание заметки"
+		WindowStartupLocation="CenterOwner"
+		ShowInTaskbar="False"
+		CanResize="False"
+		Foreground="White"
+        Background="#171C2C">
+	<Design.DataContext>
+		<vm:NoteWindowViewModel />
+	</Design.DataContext>
+
+	<Window.Styles>
+		<Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBoxItem:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+		<Style Selector="ListBox ListBoxItem">
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Margin" Value="2,0,5,5"/>
+		</Style>
+		<Style Selector="ListBox TextBox Border#PART_BorderElement">
+			<Setter Property="Background" Value="{Binding $parent[Border].Background, Mode=TwoWay}"/>
+			<Setter Property="BorderBrush" Value="{Binding $parent[Border].BorderBrush, Mode=TwoWay}"/>
+		</Style>
+		<Style Selector="ListBox TextBox:pointerover Border#PART_BorderElement">
+			<Setter Property="BorderThickness" Value="2,0"/>
+		</Style>
+		<Style Selector="ListBox TextBox:focus Border#PART_BorderElement">
+			<Setter Property="BorderThickness" Value="2,0"/>
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="CornerRadius" Value="15"/>
+		</Style>
+		<Style Selector="Button#deleteB">
+			<Setter Property="Background" Value="#961E1E"/>
+		</Style>
+		<Style Selector="Button#deleteB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#7C1818"/>
+		</Style>
+		<Style Selector="Button#okB">
+			<Setter Property="Background" Value="White"/>
+			<Setter Property="Foreground" Value="#171C2C"/>
+		</Style>
+		<Style Selector="Button#okB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#747780"/>
+		</Style>
+		<Style Selector="Button#cancelB">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="DarkGray"/>
+		</Style>
+		<Style Selector="Button#cancelB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="DarkGray"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+		</Style>
+		<Style Selector="Button#subPointDeleteB Image">
+			<Setter Property="Source" Value="/Assets/close.png"/>
+		</Style>
+		<Style Selector="Button#subPointDeleteB:pointerover Image">
+			<Setter Property="Source" Value="/Assets/close_pointerover.png"/>
+		</Style>
+		<Style Selector="Button#addSubPointB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#removeAllSubPointsB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Margin="5">
+		<TextBox Grid.Row="0" x:Name="noteTextTB" CornerRadius="25" BorderThickness="2" MinHeight="350" MaxHeight="350" Watermark="Заметка" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" FontSize="16" Text="{Binding NoteText}" />
+		<CheckBox Grid.Row="1" x:Name="isCheckedCB" CornerRadius="25" FontSize="16" Margin="0,5,0,0" Click="NoteCheckedChange">Заметка выполнена</CheckBox>
+		<Button Grid.Row="2" x:Name="addSubPointB" Margin="0,5,0,10" Background="#0F5B9F" Width="{Binding $parent[Grid].Bounds.Width}" HorizontalContentAlignment="Center" Click="AddSubPoint">Добавить подпункт</Button>
+		
+		<ListBox x:Name="subPointsLB" Grid.Row="3" Items="{Binding SubPoints}" Background="#171C2C" IsVisible="False">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Border x:Name="subPointBorder" BorderThickness="2" CornerRadius="25">
+						<Grid ColumnDefinitions="Auto,*,Auto">
+							<Button Grid.Column="0" Padding="0" Background="Transparent" VerticalAlignment="Stretch" CornerRadius="25,0,0,25" ToolTip.Tip="Выполнено" Command="{Binding CheckboxMask}">
+								<CheckBox Margin="7,0,4,0" Padding="0" CornerRadius="25" VerticalAlignment="Center" VerticalContentAlignment="Center" IsChecked="{Binding IsChecked}" />
+							</Button>
+							<TextBox x:Name="subPointTextTB" Grid.Column="1" Margin="0" MaxHeight="150" Watermark="Текст подпункта" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FontSize="16" BorderThickness="2,0" CornerRadius="0" Text="{Binding Text}" KeyDown="SubPointTextTB_KeyDown" />
+							<Button x:Name="subPointDeleteB" Grid.Column="2" Background="Transparent" VerticalAlignment="Stretch" VerticalContentAlignment="Center" CornerRadius="0,25,25,0" ToolTip.Tip="Удалить подпункт" Command="{Binding RemoveSubPoint}" CommandParameter="{Binding $parent[Window]}">
+								<Image Width="15" Margin="0,2,0,0" />
+							</Button>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		<Button Grid.Row="4" x:Name="removeAllSubPointsB" IsVisible="{Binding #subPointsLB.IsVisible}" Margin="0,10,0,5" Background="#0F5B9F" Width="{Binding $parent[Grid].Bounds.Width}" HorizontalContentAlignment="Center" Click="RemoveAllSubPoints">Удалить все подпункты</Button>
+		
+		<DockPanel Grid.Row="5" Margin="0,10,0,0">
+			<Button x:Name="cancelB" DockPanel.Dock="Right" Click="CloseWindow">Отмена</Button>
+			<Button x:Name="okB" DockPanel.Dock="Right" Margin="0,0,10,0" Click="Save" IsEnabled="{Binding ConfirmEnabled}">Сохранить</Button>
+
+			<Button x:Name="deleteB" DockPanel.Dock="Left" Click="Delete" IsVisible="{Binding IsAuthor}">Удалить заметку</Button>
+		</DockPanel>
+	</Grid>
+</Window>

@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+			 xmlns:views="using:EnterpriseMessengerUI.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EnterpriseMessengerUI.Views.NotesTabView"
+			 Foreground="White"
+             Background="#171C2C">
+	<Design.DataContext>
+		<vm:NotesTabViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="ScrollViewer">
+			<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+			<Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+			<Setter Property="AllowAutoHide" Value="False"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button">
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush Source="/Assets/post-it.png" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush Source="/Assets/post-it_pointerover.png" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background">
+				<Setter.Value>
+					<ImageBrush Source="/Assets/post-it_pointerover.png" Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button Image#plus">
+			<Setter Property="Source" Value="/Assets/plus.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:pointerover Image#plus">
+			<Setter Property="Source" Value="/Assets/plus_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:disabled Image#plus">
+			<Setter Property="Source" Value="/Assets/plus_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button Image#hasSubPoints">
+			<Setter Property="Source" Value="/Assets/list.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:pointerover Image#hasSubPoints">
+			<Setter Property="Source" Value="/Assets/list_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:disabled Image#hasSubPoints">
+			<Setter Property="Source" Value="/Assets/list_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button Image#notOwner">
+			<Setter Property="Source" Value="/Assets/group.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:pointerover Image#notOwner">
+			<Setter Property="Source" Value="/Assets/group_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:disabled Image#notOwner">
+			<Setter Property="Source" Value="/Assets/group_pointerover.png"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:pointerover SelectableTextBlock">
+			<Setter Property="Foreground" Value="#A2A4AD"/>
+		</Style>
+		<Style Selector="ScrollViewer ItemsRepeater Button:disabled SelectableTextBlock">
+			<Setter Property="Foreground" Value="#A2A4AD"/>
+		</Style>
+	</UserControl.Styles>
+
+	<ScrollViewer>
+		<ItemsRepeater Items="{Binding Notes}" Margin="5" x:Name="notesIR">
+			<ItemsRepeater.Layout>
+				<WrapLayout/>
+			</ItemsRepeater.Layout>
+			<ItemsRepeater.ItemTemplate>
+				<DataTemplate>
+					<Button Margin="5" Width="148" Height="{Binding $self.Bounds.Width}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding OnClick}" CommandParameter="{Binding $parent}" ToolTip.Tip="{Binding ButtonToolTip}">
+						<Button.ContextFlyout>
+							<MenuFlyout>
+								<MenuItem Header="{Binding MainActionText}" Command="{Binding OnClick}" CommandParameter="{Binding #notesIR}" />
+								<MenuItem Header="Поделиться" Command="{Binding Share}" CommandParameter="{Binding #notesIR}" IsVisible="{Binding !IsFirst}" />
+								<MenuItem Header="Соавторы" Command="{Binding ShowOwners}" CommandParameter="{Binding #notesIR}" IsVisible="{Binding !IsFirst}" />
+								<MenuItem Header="Удалить" Command="{Binding Delete}" CommandParameter="{Binding #notesIR}" IsVisible="{Binding IsAuthor}" />
+							</MenuFlyout>
+						</Button.ContextFlyout>
+						<Grid RowDefinitions="*,Auto">
+							<SelectableTextBlock Grid.Row="0" Margin="{Binding NameMargin}" Padding="5" FontSize="16" TextAlignment="Center" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis" Text="{Binding Name}" IsVisible="{Binding !IsFirst}" TextDecorations="{Binding TextDecorations}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+							<Image Grid.Row="0" x:Name="plus" Margin="30" IsVisible="{Binding IsFirst}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+							<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+								<Image x:Name="hasSubPoints" Width="25" Margin="0,0,5,0" ToolTip.Tip="Содержит подпункты" IsVisible="{Binding HasSubPoints}" />
+								<Image x:Name="notOwner" Width="25" ToolTip.Tip="Вы – соавтор данной заметки" IsVisible="{Binding !IsAuthor}">
+									<Image.IsVisible>
+										<MultiBinding Converter="{x:Static BoolConverters.And}">
+											<Binding Path="!$self.DataContext.IsAuthor"/>
+											<Binding Path="!$self.DataContext.IsFirst"/>
+										</MultiBinding>
+									</Image.IsVisible>
+								</Image>
+							</StackPanel>
+						</Grid>
+					</Button>
+				</DataTemplate>
+			</ItemsRepeater.ItemTemplate>
+		</ItemsRepeater>
+	</ScrollViewer>
+</UserControl>

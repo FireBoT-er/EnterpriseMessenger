@@ -1,0 +1,131 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+             xmlns:views="using:EnterpriseMessengerUI.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="EnterpriseMessengerUI.Views.SettingsTabView"
+			 xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+             Foreground="White"
+             Background="#171C2C">
+	<Design.DataContext>
+		<vm:SettingsTabViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#747780"/>
+		</Style>
+		<Style Selector="Button#aboutB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#394972"/>
+		</Style>
+		<Style Selector="Button#licensesB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#394972"/>
+		</Style>
+		<Style Selector="Button#changeAvatarB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#infoEditB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#changePasswordB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#changeAvatarClearB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#7C1818"/>
+		</Style>
+		<Style Selector="Button#showErrorsB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#961E1E"/>
+		</Style>
+		<Style Selector="Button#logoutB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#700000"/>
+		</Style>
+	</UserControl.Styles>
+
+	<Grid ColumnDefinitions="*,2*,*" RowDefinitions="Auto,Auto,*,Auto">
+		<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Background="#26304C" CornerRadius="10" Margin="10,10,10,0">
+			<StackPanel>
+				<SelectableTextBlock Margin="12,5,10,0" FontSize="26" FontWeight="SemiBold" TextWrapping="Wrap" HorizontalAlignment="Center">
+					<SelectableTextBlock.Text>
+						<MultiBinding StringFormat="{}{0} {1} {2}">
+							<Binding Path="Surname"/>
+							<Binding Path="Name"/>
+							<Binding Path="Patronymic"/>
+						</MultiBinding>
+					</SelectableTextBlock.Text>
+				</SelectableTextBlock>
+				<SelectableTextBlock Margin="12,5,10,10" Foreground="DarkGray" FontSize="20" TextWrapping="Wrap" HorizontalAlignment="Center" Text="{Binding Position}"/>
+			</StackPanel>
+		</Border>
+
+		<Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Background="#26304C" CornerRadius="10" Margin="10,10,5,5">
+			<Grid RowDefinitions="Auto,*,Auto,Auto,Auto" VerticalAlignment="Top" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Изображение профиля</TextBlock>
+				
+				<Border Grid.Row="1" ClipToBounds="True" CornerRadius="180" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" x:Name="avatarI">
+					<Border.Background>
+						<ImageBrush Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+					</Border.Background>
+					<Image Source="/Assets/empty.png" MaxWidth="250" />
+				</Border>
+				<asyncImageLoader:AdvancedImage Grid.Row="1" Source="{Binding PhotoFileName}" MaxWidth="250" IsVisible="False" x:Name="invAvatarI" />
+				
+				<Button Grid.Row="2" FontSize="16" x:Name="changeAvatarB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#0F5B9F" Content="Изменить" Click="ChangeAvatar" />
+				<Button Grid.Row="3" FontSize="16" Margin="0,10,0,0" x:Name="changeAvatarClearB" IsVisible="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#961E1E" Click="ClearAvatar">Удалить</Button>
+				<Button Grid.Row="4" FontSize="16" Margin="0,10" x:Name="changeAvatarCancelB" IsVisible="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelChangeAvatar">Отменить</Button>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="3" Grid.Column="0" Background="#26304C" CornerRadius="10" Margin="10,5,5,10">
+			<Grid RowDefinitions="Auto,Auto" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">О программе</TextBlock>
+				<Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,0,0,5" HorizontalAlignment="Center" Width="{Binding $parent[Grid].Bounds.Width}">
+					<Button x:Name="aboutB" FontSize="12" Margin="0,0,2,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Grid.Column="0" Click="About">Об авторе</Button>
+					<Button x:Name="licensesB" FontSize="12" Margin="3,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Grid.Column="1" Click="Licenses">Лицензии</Button>
+				</Grid>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="1" Grid.Column="1" Background="#26304C" CornerRadius="10" Margin="5,10,5,5">
+			<Grid RowDefinitions="Auto,Auto" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Статус</TextBlock>
+
+				<StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+					<RadioButton x:Name="onlineRB" Margin="0,0,5,0" Padding="5,0,0,0" FontSize="16" Click="OnlineRB_Click">В сети</RadioButton>
+					<RadioButton x:Name="busyRB" Margin="5,0,0,0" Padding="5,0,0,0" FontSize="16" Click="BusyRB_Click">Занят</RadioButton>
+				</StackPanel>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Background="#26304C" CornerRadius="10" Margin="5,5,5,10">
+			<Grid RowDefinitions="Auto,*,Auto" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Информация о себе</TextBlock>
+				<TextBox Grid.Row="1" TextWrapping="Wrap" AcceptsReturn="True" FontSize="16" BorderThickness="2" BorderBrush="White" IsReadOnly="True" Text="{Binding Information}" x:Name="infoTB"/>
+				<Grid Grid.Row="2" ColumnDefinitions="*,*" Margin="0,10,0,5" HorizontalAlignment="Center" Width="{Binding $parent[Grid].Bounds.Width}">
+					<Button Grid.Column="0" Grid.ColumnSpan="2" x:Name="infoEditB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="16" Background="#0F5B9F" Content="Изменить" Click="EditInformation"/>
+					<Button Grid.Column="1" Margin="5,0,0,0" FontSize="16" IsVisible="False" x:Name="infoEditCancelB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelEditInformation">Отменить</Button>
+				</Grid>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Background="#26304C" CornerRadius="10" Margin="5,10,10,5">
+			<Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" VerticalAlignment="Top" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Изменение пароля</TextBlock>
+				<TextBox Grid.Row="1" FontSize="14" BorderThickness="2" BorderBrush="White" Margin="0,0,0,10" Watermark="Текущий пароль" x:Name="oldPasswordTB" IsVisible="False" PasswordChar="*" UseFloatingWatermark="True" Classes="revealPasswordButton" KeyDown="OldPassword_KeyDown" />
+				<TextBox Grid.Row="2" FontSize="14" BorderThickness="2" BorderBrush="White" Margin="0,0,0,10" Watermark="Новый пароль" x:Name="newPasswordTB" IsVisible="False" PasswordChar="*" UseFloatingWatermark="True" Classes="revealPasswordButton" KeyDown="NewPassword_KeyDown"
+						 ToolTip.Tip="Пароль дожен содержать от 6 до 40 символов, а также обязательно как минимум одну заглавную букву, цифру и любой другой символ (например, точку или тире)" />
+				<Button Grid.Row="3" x:Name="showErrorsB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="16" Background="Firebrick" Margin="0,0,0,10" IsVisible="False" Content="Показать ошибки" Click="ShowErrors" />
+				<Button Grid.Row="4" x:Name="changePasswordB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="16" Background="#0F5B9F" Content="Изменить" Click="СhangePassword" />
+				<Button Grid.Row="5" FontSize="16" IsVisible="False" Margin="0,5,0,0" x:Name="changePasswordСancelB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelСhangePassword">Отменить</Button>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="3" Grid.Column="2" Background="#26304C" CornerRadius="10" Margin="5,5,10,10">
+			<Grid RowDefinitions="Auto,Auto" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Выход</TextBlock>
+				<Button Grid.Row="1" x:Name="logoutB" Margin="0,0,0,5" FontSize="16" Background="DarkRed" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="Logout">Выйти</Button>
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

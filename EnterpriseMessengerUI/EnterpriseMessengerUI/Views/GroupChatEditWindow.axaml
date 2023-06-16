@@ -1,0 +1,95 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:EnterpriseMessengerUI.ViewModels"
+		xmlns:conv="using:EnterpriseMessengerUI.Converters"
+		mc:Ignorable="d" d:DesignWidth="475" d:DesignHeight="250"
+		Width="475" Height="250"
+        x:Class="EnterpriseMessengerUI.Views.GroupChatEditWindow"
+		xmlns:asyncImageLoader="clr-namespace:AsyncImageLoader;assembly=AsyncImageLoader.Avalonia"
+        Icon="/Assets/chat.ico"
+		Title="Редактирование чата"
+		WindowStartupLocation="CenterOwner"
+		ShowInTaskbar="False"
+		CanResize="False"
+		Foreground="White"
+        Background="#171C2C">
+	<Design.DataContext>
+		<vm:GroupChatEditWindowViewModel />
+	</Design.DataContext>
+
+	<Window.Styles>
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="16"/>
+		</Style>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#747780"/>
+		</Style>
+		<Style Selector="Button#changeAvatarB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#changeAvatarClearB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#7C1818"/>
+		</Style>
+		<Style Selector="Button#chatNameEditB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#086ABB"/>
+		</Style>
+		<Style Selector="Button#deleteB">
+			<Setter Property="Background" Value="#961E1E"/>
+		</Style>
+		<Style Selector="Button#deleteB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#7C1818"/>
+		</Style>
+		<Style Selector="Button#cancelB">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="DarkGray"/>
+		</Style>
+		<Style Selector="Button#cancelB:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="DarkGray"/>
+			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="Gray"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid ColumnDefinitions="*,*" RowDefinitions="*,Auto" Margin="10">
+		<Border Grid.Row="0" Grid.Column="0" Background="#26304C" CornerRadius="10" Margin="0,0,5,0">
+			<Grid RowDefinitions="Auto,*,Auto,Auto,Auto" VerticalAlignment="Top" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Изображение чата</TextBlock>
+
+				<Border Grid.Row="1" ClipToBounds="True" CornerRadius="180" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" x:Name="avatarI">
+					<Border.Background>
+						<ImageBrush Stretch="UniformToFill" RenderOptions.BitmapInterpolationMode="MediumQuality" />
+					</Border.Background>
+					<Image Source="/Assets/empty.png" MaxWidth="250" />
+				</Border>
+				<asyncImageLoader:AdvancedImage Grid.Row="1" Source="{Binding PhotoFileName}" MaxWidth="250" IsVisible="False" x:Name="invAvatarI" />
+
+				<Button Grid.Row="2" FontSize="16" x:Name="changeAvatarB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#0F5B9F" Content="Изменить" Click="ChangeAvatar" />
+				<Button Grid.Row="3" FontSize="16" Margin="0,10,0,0" x:Name="changeAvatarClearB" IsVisible="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#961E1E" Click="ClearAvatar">Удалить</Button>
+				<Button Grid.Row="4" FontSize="16" Margin="0,10" x:Name="changeAvatarCancelB" IsVisible="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelChangeAvatar">Отменить</Button>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="0" Grid.Column="1" Background="#26304C" CornerRadius="10" Margin="5,0,0,0">
+			<Grid RowDefinitions="Auto,*,Auto" Margin="10,5">
+				<TextBlock Grid.Row="0" Margin="0,0,0,10" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center">Название чата</TextBlock>
+				
+				<TextBox Grid.Row="1" FontSize="16" Margin="0,0,0,10" TextWrapping="Wrap" BorderThickness="2" BorderBrush="White" IsReadOnly="True" x:Name="chatNameTB"/>
+				
+				<Grid Grid.Row="2" ColumnDefinitions="*,*" HorizontalAlignment="Center" Width="{Binding $parent[Grid].Bounds.Width}">
+					<Button Grid.Column="0" Grid.ColumnSpan="2" x:Name="chatNameEditB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" FontSize="16" Background="#0F5B9F" Content="Изменить" Click="EditChatName" />
+					<Button Grid.Column="1" Margin="5,0,0,0" FontSize="16" IsVisible="False" x:Name="chatNameEditCancelB" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Click="CancelEditChatName">Отменить</Button>
+				</Grid>
+			</Grid>
+		</Border>
+			
+		<DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,0">
+			<Button x:Name="cancelB" DockPanel.Dock="Right" CornerRadius="15" Click="CloseWindow">Закрыть</Button>
+			<Button x:Name="deleteB" DockPanel.Dock="Left" CornerRadius="15" Click="Delete" IsVisible="{Binding CanDelete}">Удалить чат</Button>
+		</DockPanel>
+	</Grid>
+</Window>
