@@ -111,6 +111,9 @@ namespace EnterpriseMessengerServer
 
             using (var scope = app.Services.CreateScope())
             {
+                var dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
+                dbContext.Database.EnsureCreated();
+
                 var userManager = (UserManager<ApplicationUser>)scope.ServiceProvider.GetService(typeof(UserManager<ApplicationUser>))!;
                 var roleManager = (RoleManager<IdentityRole>)scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>))!;
 
